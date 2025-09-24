@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import BacklinkStrategy from '@/components/BacklinkStrategy';
+import BacklinkAnalyzer from '@/components/BacklinkAnalyzer';
 
 interface SEOMetrics {
   title: string;
@@ -17,6 +19,7 @@ export default function Home() {
   const [url, setUrl] = useState('');
   const [metrics, setMetrics] = useState<SEOMetrics | null>(null);
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<'analysis' | 'backlinks'>('analysis');
 
   const analyzeSEO = async () => {
     setLoading(true);
@@ -47,83 +50,119 @@ export default function Home() {
           </p>
         </header>
 
-        {/* URL Input */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
-          <div className="flex gap-4">
-            <input
-              type="url"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              placeholder="Enter URL to analyze (e.g., https://example.com)"
-              className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-            />
-            <button
-              onClick={analyzeSEO}
-              disabled={loading}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400"
-            >
-              {loading ? 'Analyzing...' : 'Analyze'}
-            </button>
-          </div>
+        {/* Tab Navigation */}
+        <div className="flex gap-2 mb-6">
+          <button
+            onClick={() => setActiveTab('analysis')}
+            className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+              activeTab === 'analysis'
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+            }`}
+          >
+            📊 SEO分析
+          </button>
+          <button
+            onClick={() => setActiveTab('backlinks')}
+            className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+              activeTab === 'backlinks'
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+            }`}
+          >
+            🔗 外部リンク戦略
+          </button>
         </div>
 
-        {/* Metrics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <MetricCard title="Page Score" value="85" unit="/100" color="green" />
-          <MetricCard title="Load Time" value="2.3" unit="s" color="yellow" />
-          <MetricCard title="Mobile Score" value="92" unit="/100" color="green" />
-          <MetricCard title="Issues Found" value="5" unit="" color="red" />
-        </div>
+        {/* Tab Content */}
+        {activeTab === 'analysis' ? (
+          <>
+            {/* URL Input */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
+              <div className="flex gap-4">
+                <input
+                  type="url"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  placeholder="Enter URL to analyze (e.g., https://example.com)"
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                />
+                <button
+                  onClick={analyzeSEO}
+                  disabled={loading}
+                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400"
+                >
+                  {loading ? 'Analyzing...' : 'Analyze'}
+                </button>
+              </div>
+            </div>
 
-        {/* SEO Analysis Results */}
-        {metrics && (
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-            <h2 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">
-              SEO Analysis Results
-            </h2>
+            {/* Metrics Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              <MetricCard title="Page Score" value="85" unit="/100" color="green" />
+              <MetricCard title="Load Time" value="2.3" unit="s" color="yellow" />
+              <MetricCard title="Mobile Score" value="92" unit="/100" color="green" />
+              <MetricCard title="Issues Found" value="5" unit="" color="red" />
+            </div>
 
-            <div className="space-y-4">
-              <AnalysisItem
-                label="Title Tag"
-                value={metrics.title}
-                status={metrics.titleLength >= 30 && metrics.titleLength <= 60 ? 'good' : 'warning'}
-                hint={`${metrics.titleLength} characters (optimal: 30-60)`}
-              />
+            {/* SEO Analysis Results */}
+            {metrics && (
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                <h2 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">
+                  SEO Analysis Results
+                </h2>
 
-              <AnalysisItem
-                label="Meta Description"
-                value={metrics.description}
-                status={metrics.descriptionLength >= 120 && metrics.descriptionLength <= 160 ? 'good' : 'warning'}
-                hint={`${metrics.descriptionLength} characters (optimal: 120-160)`}
-              />
+                <div className="space-y-4">
+                  <AnalysisItem
+                    label="Title Tag"
+                    value={metrics.title}
+                    status={metrics.titleLength >= 30 && metrics.titleLength <= 60 ? 'good' : 'warning'}
+                    hint={`${metrics.titleLength} characters (optimal: 30-60)`}
+                  />
 
-              <AnalysisItem
-                label="H1 Tags"
-                value={`${metrics.h1Count} found`}
-                status={metrics.h1Count === 1 ? 'good' : 'error'}
-                hint={metrics.h1Count === 1 ? 'Perfect!' : 'Should have exactly 1 H1 tag'}
-              />
+                  <AnalysisItem
+                    label="Meta Description"
+                    value={metrics.description}
+                    status={metrics.descriptionLength >= 120 && metrics.descriptionLength <= 160 ? 'good' : 'warning'}
+                    hint={`${metrics.descriptionLength} characters (optimal: 120-160)`}
+                  />
 
-              <AnalysisItem
-                label="Images with Alt Text"
-                value={`${metrics.imageAltCount} images`}
-                status="good"
-                hint="All images have alt text"
-              />
+                  <AnalysisItem
+                    label="H1 Tags"
+                    value={`${metrics.h1Count} found`}
+                    status={metrics.h1Count === 1 ? 'good' : 'error'}
+                    hint={metrics.h1Count === 1 ? 'Perfect!' : 'Should have exactly 1 H1 tag'}
+                  />
 
-              <AnalysisItem
-                label="Internal Links"
-                value={`${metrics.internalLinks} links`}
-                status="good"
-                hint="Good internal linking structure"
-              />
+                  <AnalysisItem
+                    label="Images with Alt Text"
+                    value={`${metrics.imageAltCount} images`}
+                    status="good"
+                    hint="All images have alt text"
+                  />
 
-              <AnalysisItem
-                label="External Links"
-                value={`${metrics.externalLinks} links`}
-                status="good"
-                hint="External links found"
-              />
+                  <AnalysisItem
+                    label="Internal Links"
+                    value={`${metrics.internalLinks} links`}
+                    status="good"
+                    hint="Good internal linking structure"
+                  />
+
+                  <AnalysisItem
+                    label="External Links"
+                    value={`${metrics.externalLinks} links`}
+                    status="good"
+                    hint="External links found"
+                  />
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="space-y-8">
+            <BacklinkAnalyzer />
+            <div className="border-t border-gray-300 dark:border-gray-700 pt-8">
+              <BacklinkStrategy />
             </div>
           </div>
         )}
