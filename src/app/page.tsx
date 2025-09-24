@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Sidebar from '@/components/Sidebar';
 import BacklinkStrategy from '@/components/BacklinkStrategy';
 import BacklinkAnalyzer from '@/components/BacklinkAnalyzer';
+import AccountList from '@/components/AccountList';
 
 interface SEOMetrics {
   title: string;
@@ -49,6 +50,8 @@ export default function Home() {
         return <BacklinkStrategy />;
       case 'backlinks/backlink-analysis':
         return <BacklinkAnalyzer />;
+      case 'backlinks/account-list':
+        return <AccountList />;
       case 'backlinks/outreach':
         return <OutreachContent />;
       case 'content/content-optimizer':

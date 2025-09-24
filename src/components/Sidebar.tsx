@@ -34,6 +34,7 @@ const menuItems: MenuItem[] = [
     subItems: [
       { id: 'backlink-strategy', label: '獲得戦略', icon: '🎯' },
       { id: 'backlink-analysis', label: 'リンク分析', icon: '📈' },
+      { id: 'account-list', label: 'アカウント管理', icon: '👥' },
       { id: 'outreach', label: 'アウトリーチ', icon: '📧' },
     ]
   },
@@ -132,45 +133,45 @@ export default function Sidebar({ activeSection, onSectionChange, isOpen, onTogg
       <aside
         className={`fixed top-0 left-0 h-full bg-white dark:bg-gray-900 shadow-xl z-40 transition-transform duration-300 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0 lg:static lg:z-0 w-64`}
+        } lg:translate-x-0 lg:static lg:z-0 w-52`}
       >
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-              <span className="text-3xl">🚀</span>
+          <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+            <h1 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              <span className="text-xl">🚀</span>
               SEO Dashboard
             </h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
               v1.0.0
             </p>
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 overflow-y-auto p-4">
-            <ul className="space-y-1">
+          <nav className="flex-1 overflow-y-auto p-2">
+            <ul className="space-y-0.5">
               {menuItems.map((item) => (
                 <li key={item.id}>
                   <button
                     onClick={() => handleItemClick(item)}
-                    className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-200 ${
+                    className={`w-full flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-200 ${
                       activeSection === item.id || activeSection.startsWith(`${item.id}/`)
                         ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
                         : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'
                     }`}
                   >
-                    <div className="flex items-center gap-3">
-                      <span className="text-xl">{item.icon}</span>
-                      <span className="font-medium">{item.label}</span>
-                    </div>
                     <div className="flex items-center gap-2">
+                      <span className="text-base">{item.icon}</span>
+                      <span className="text-sm font-medium">{item.label}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
                       {item.badge && (
-                        <span className="px-2 py-0.5 text-xs bg-red-500 text-white rounded-full">
+                        <span className="px-1.5 py-0.5 text-xs bg-red-500 text-white rounded-full">
                           {item.badge}
                         </span>
                       )}
                       {item.subItems && (
-                        <span className={`transition-transform ${expandedItems.includes(item.id) ? 'rotate-90' : ''}`}>
+                        <span className={`text-xs transition-transform ${expandedItems.includes(item.id) ? 'rotate-90' : ''}`}>
                           ▶
                         </span>
                       )}
@@ -179,19 +180,19 @@ export default function Sidebar({ activeSection, onSectionChange, isOpen, onTogg
 
                   {/* Sub Items */}
                   {item.subItems && expandedItems.includes(item.id) && (
-                    <ul className="mt-1 ml-6 space-y-1">
+                    <ul className="mt-0.5 ml-4 space-y-0.5">
                       {item.subItems.map((subItem) => (
                         <li key={subItem.id}>
                           <button
                             onClick={() => handleItemClick(subItem, item.id)}
-                            className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-all duration-200 ${
+                            className={`w-full flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all duration-200 ${
                               activeSection === `${item.id}/${subItem.id}`
                                 ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
                                 : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400'
                             }`}
                           >
-                            <span className="text-lg">{subItem.icon}</span>
-                            <span className="text-sm">{subItem.label}</span>
+                            <span className="text-sm">{subItem.icon}</span>
+                            <span className="text-xs">{subItem.label}</span>
                           </button>
                         </li>
                       ))}
@@ -203,14 +204,14 @@ export default function Sidebar({ activeSection, onSectionChange, isOpen, onTogg
           </nav>
 
           {/* Footer */}
-          <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-            <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-gray-100 dark:bg-gray-800">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
+          <div className="p-3 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800">
+              <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
                 U
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-gray-900 dark:text-white">User</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Free Plan</p>
+                <p className="text-xs font-medium text-gray-900 dark:text-white">User</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Free</p>
               </div>
             </div>
           </div>
